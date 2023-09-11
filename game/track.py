@@ -1,5 +1,5 @@
 import pygame
-from os import path
+import os
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
@@ -11,6 +11,20 @@ class BeatType(Enum):
     Right = auto
     Up = auto
     Down = auto
+
+class Landing(pygame.sprite.Sprite):
+    def __init__(self, color, size):
+        super().__init__()
+        
+        self.size = size
+        self.image = pygame.transform.scale(
+        pygame.image.load(os.path.join(sprites,"arrow.png")),
+        self.size)
+        
+        colorImage = pygame.Surface(self.size).convert_alpha()
+        colorImage.fill(color)
+        self.image.blit(colorImage, (0,0), special_flags = pygame.BLEND_RGBA_MULT)
+        
 
 
 class Beat(pygame.sprite.Sprite):

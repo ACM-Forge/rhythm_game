@@ -8,12 +8,15 @@ from .config import *
 def showLandings(screen: pygame.Surface, inputs: Input):
     global width, height, sprites
     iconSize = (100,100)
-    rightArrowImage = pygame.transform.scale(
-        pygame.image.load(os.path.join(sprites,"arrow.png")),
-        iconSize)
-    leftArrowImage = pygame.transform.rotate(rightArrowImage,180)
-    downArrowImage = pygame.transform.rotate(rightArrowImage,90)
-    upArrowImage = pygame.transform.rotate(rightArrowImage,270)
+    rightArrowImage = Landing((255,0,0),iconSize)
+    leftArrowImage = Landing((0,0,255),iconSize)
+    leftArrowImage.image = pygame.transform.rotate(leftArrowImage.image, 180)
+    downArrowImage = Landing((0,255,0), iconSize)
+    downArrowImage.image = pygame.transform.rotate(downArrowImage.image,90)
+    upArrowImage = Landing((255,255,0), iconSize)
+    upArrowImage.image = pygame.transform.rotate(upArrowImage.image,270)
+    
+    
 
     center = (width / 2,9 * height / 10)
     spacing = 1.5
@@ -26,13 +29,13 @@ def showLandings(screen: pygame.Surface, inputs: Input):
     rightArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
     rightArrowRect.center =         (center[0] + 150 * spacing,center[1])
     if inputs.first != 0:
-        screen.blit(leftArrowImage,leftArrowRect)
+        screen.blit(leftArrowImage.image,leftArrowRect)
     if inputs.second != 0:
-        screen.blit(downArrowImage,downArrowRect)
+        screen.blit(downArrowImage.image,downArrowRect)
     if inputs.third != 0:
-        screen.blit(upArrowImage,upArrowRect)
+        screen.blit(upArrowImage.image,upArrowRect)
     if inputs.fourth != 0:
-        screen.blit(rightArrowImage,rightArrowRect)
+        screen.blit(rightArrowImage.image,rightArrowRect)
 
 
 def handleInput(event: pygame.event.Event, input_state: Input, clock: pygame.time.Clock):
@@ -73,7 +76,7 @@ def main():
 
     currScene = Scenes.StartMenu
     
-    track = Track()
+    #track = Track()
     
     gameOver = False
     while not gameOver:
