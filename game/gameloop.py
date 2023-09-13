@@ -50,15 +50,16 @@ def showLandings(landings: list,screen: pygame.Surface, inputs: Input):
         screen.blit(landing[0].image,landing[1])
         
 
-def handleInput(event: pygame.event.Event, input_state: Input, clock: pygame.time.Clock):
+def handleInput(event: pygame.event.Event, input_state: Input):
+    seconds = (pygame.time.get_ticks() / 1000.0)
     if event.key == InputButtons["First"]:
-        input_state.first = float(clock.tick())
+        input_state.first = float(seconds)
     if event.key == InputButtons["Second"]:
-        input_state.second = float(clock.tick())
+        input_state.second = float(seconds)
     if event.key == InputButtons["Third"]:
-        input_state.third = float(clock.tick())
+        input_state.third = float(seconds)
     if event.key == InputButtons["Fourth"]:
-        input_state.fourth = float(clock.tick())
+        input_state.fourth = float(seconds)
 
 
 def resetInput(event: pygame.event.Event,input_state: Input):
@@ -72,7 +73,7 @@ def resetInput(event: pygame.event.Event,input_state: Input):
         input_state.fourth = 0
 
 
-def loadLanes():
+def loadLanes() -> []:
     """Create all lanes for beats to travel along to be displayed on each frame"""
     lane_1 = pygame.rect.Rect(width / 6.5,0,100,height)
     lane_2 = pygame.rect.Rect(width / 2.9,0,100,height)
@@ -120,12 +121,13 @@ def main():
             
         showLanes(lanes,canvas)
         showLandings(landings,canvas, input_state)
+        print(input_state)
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 gameOver = True
             if e.type == pygame.KEYDOWN:
-                handleInput(e,input_state,clock)
+                handleInput(e,input_state)
             if e.type == pygame.KEYUP:
                 resetInput(e,input_state)
         pygame.display.flip()
