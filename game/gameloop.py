@@ -2,53 +2,10 @@ import pygame
 import os
 
 from .types import *
+from .landing import *
+from .beat import *
 from .track import *
 from .config import *
-
-def loadLandings() -> []:
-    rightArrow = Landing((255,0,0), iconSize)
-    leftArrow = Landing((0,0,255) , iconSize)
-    downArrow = Landing((0,255,0) , iconSize)
-    upArrow = Landing((255,255,0) , iconSize)
-
-    leftArrow.image = pygame.transform.rotate(leftArrow.image, 180)
-    downArrow.image = pygame.transform.rotate(downArrow.image,90)
-    upArrow.image = pygame.transform.rotate(upArrow.image,270)
-    center = (width / 2,9 * height / 10)
-
-    spacing = 1.5
-    leftArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    downArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    upArrowRect =   pygame.rect.Rect(center[0],center[1],iconSize[0],iconSize[1])
-    rightArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    leftArrowRect.center =  (center[0] - 150 * spacing,center[1])
-    downArrowRect.center =  (center[0] - 50 * spacing,center[1])
-    upArrowRect.center =    (center[0] + 50 * spacing,center[1])
-    rightArrowRect.center = (center[0] + 150 * spacing,center[1])
-
-    return [
-        [leftArrow,leftArrowRect],
-        [downArrow,downArrowRect],
-        [upArrow,upArrowRect],
-        [rightArrow,rightArrowRect],
-    ]
-
-
-def showLandings(landings: list,screen: pygame.Surface, inputs: Input):
-    global width, height, sprites
-    
-    # if inputs.first != 0:
-    #     # Show the icon filled in
-    # elif inputs.second != 0:
-    #     # Show the icon filled in
-    # elif inputs.third != 0:
-    #     # Show the icon filled in
-    # elif inputs.fourth != 0:
-    #     # Show the icon filled in
-    
-    for landing in landings:
-        screen.blit(landing[0].image,landing[1])
-        
 
 def handleInput(event: pygame.event.Event, input_state: Input):
     seconds = (pygame.time.get_ticks() / 1000.0)
@@ -106,6 +63,10 @@ def main():
     currScene = Scenes.StartMenu
     
     # Create all objects to be used in the game loop
+    
+    beatEVENT = pygame.USEREVENT+1
+    pygame.time.set_timer(beatEVENT, 500)
+    
     beat_map = readBeatMap(track_path)
     [print(beat) for beat in beat_map]
     
@@ -116,6 +77,7 @@ def main():
     gameOver = False
     while not gameOver:
         canvas.fill(bgcolor)
+        pygame.display.set_caption("ACM Rythm Game")
         
         dt = clock.tick(60)
             
@@ -126,6 +88,9 @@ def main():
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 gameOver = True
+            if e.type == beatEVENT:
+                #call beat spawn function
+                pass
             if e.type == pygame.KEYDOWN:
                 handleInput(e,input_state)
             if e.type == pygame.KEYUP:
