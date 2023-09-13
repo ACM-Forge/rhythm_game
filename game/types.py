@@ -1,12 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
-
-class Scenes(Enum):
-    StartMenu = auto
-    SettingsMenu = auto
-    Game = auto
-    
     
 @dataclass
 class Input:

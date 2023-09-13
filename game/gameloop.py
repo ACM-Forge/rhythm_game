@@ -1,5 +1,6 @@
 import pygame
 import os
+from time import sleep
 
 from .types import *
 from .landing import *
@@ -45,34 +46,54 @@ def showLanes(lanes:[pygame.Rect], screen):
     for lane in lanes:
         pygame.draw.rect(screen,(81,81,81),lane)
 
-
-def main():
-    pygame.init()
-    canvas = pygame.display.set_mode((width, height))
+def showText(canvas: pygame.Surface, text: str, color: tuple, pos: tuple):
+    font = game_font.render(text,False,color)
+    canvas.blit(font,pos)
+    
+def startMenu(canvas: pygame.Surface):
     clock = pygame.time.Clock()
-    input_state = Input()
-    dt = 0
+    countdown = False
+    
+    canvas.fill((51,51,51))
+    showText(canvas,"Click to Start",(255,255,255),(width / 3, height / 2.5))
+    pygame.display.update()
+    while not countdown:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONUP:
+                countdown = True
+            if event.type == pygame.QUIT:
+                exit(0)
 
-    # pygame.mixer.init()
-    # print(os.path.join(music,"main.mp3"))
-    # pygame.mixer.music.load(
-    #     os.path.join(music,"main.mp3")
-    # )
-    # pygame.mixer.music.play()
-
-    currScene = Scenes.StartMenu
-    
-    # Create all objects to be used in the game loop
-    
-    beatEVENT = pygame.USEREVENT+1
-    pygame.time.set_timer(beatEVENT, 500)
-    
+def countDown(canvas, count):
+    for seconds in reversed(range(count)):
+        canvas.fill(bgcolor)
+        showText(canvas,str(seconds + 1),(255,255,255),(width / 2, height / 2.5))
+        pygame.display.update()
+        sleep(1)
+        
+def gameLoop(canvas: pygame.Surface):
+    # Preload all objects to be used in the game loop
     beat_map = readBeatMap(track_path)
-    [print(beat) for beat in beat_map]
-    
     lanes = loadLanes()
     landings = loadLandings()
-    #track = Track()
+    input_state = Input()
+    
+    # Show a countdown before the game starts
+    canvas.fill((51,51,51))
+    countDown(canvas,3)
+    
+    clock = pygame.time.Clock()
+    dt = 0
+
+    # Setup and play music
+    pygame.mixer.init()
+    pygame.mixer.music.load(
+        os.path.join(music,"main.mp3")
+    )
+    pygame.mixer.music.set_volume(music_volume)
+    pygame.mixer.music.play()
+    
     
     gameOver = False
     while not gameOver:
@@ -88,9 +109,9 @@ def main():
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 gameOver = True
-            if e.type == beatEVENT:
-                #call beat spawn function
-                pass
+            # if e.type == beatEVENT:
+            #     #call beat spawn function
+            #     pass
             if e.type == pygame.KEYDOWN:
                 handleInput(e,input_state)
             if e.type == pygame.KEYUP:
@@ -98,3 +119,15 @@ def main():
         pygame.display.flip()
 
 
+def endMenu(canvas):
+    # Show final score and grade
+    # 
+    pass
+
+def main():
+    pygame.init()
+    pygame.display.set_caption("Rhythm Game")
+    canvas = pygame.display.set_mode((width, height))
+    startMenu(canvas)
+    gameLoop(canvas)
+    endMenu(canvas)
