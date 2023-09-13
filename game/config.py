@@ -6,11 +6,13 @@ width = 800
 height = 600
 gameSpeed = 1
 beatSize = (100,100)
-bgcolor = (0,0,0)
+bgcolor = (51,51,51)
+iconSize = (100,100)
 
 game_path = path.split(path.split(path.abspath(__file__))[0])[0]
 sprites = path.join(game_path,"sprites")
 music = path.join(game_path,"music")
+track_path = path.join(game_path,"track.txt")
 
 InputButtons = {
     "First": pygame.K_LEFT,
