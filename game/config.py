@@ -5,10 +5,10 @@ import pygame
 width = 800
 height = 600
 gameSpeed = 10
-score = 0
-
-beatSize = (100,100)
 bgcolor = (51,51,51)
+
+# Settings for beats
+beatSize = (100,100)
 iconSize = (100,100)
 
 # Settings for music
@@ -17,7 +17,7 @@ songOver = pygame.USEREVENT+1
 
 # Setup font configuration
 pygame.font.init()
-game_font = pygame.font.SysFont("Comic Sans",60)
+game_font = pygame.font.Font("sprites/font.ttf",42)
 
 # Settings for file paths
 game_path = path.split(path.split(path.abspath(__file__))[0])[0]

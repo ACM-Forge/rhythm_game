@@ -8,6 +8,7 @@ from .beat import *
 from .button import *
 from .track import *
 from .config import *
+from .score import *
 
 def handleInput(event: pygame.event.Event, input_state: Input):
     currTime = pygame.time.get_ticks()
@@ -105,9 +106,12 @@ def countDown(canvas, count):
 
   
 def gameLoop(canvas: pygame.Surface):
+    global score
     # Preload all objects to be used in the game loop
     beat_map = readBeatMap(track_path)
     music_path = os.path.join(music,"main.mp3")
+    
+    score.setMax(len(beat_map) * 5)
     
     lanes = loadLanes()
     landings = loadLandings()
@@ -122,7 +126,6 @@ def gameLoop(canvas: pygame.Surface):
     clock = pygame.time.Clock()
     
     dt = 0
-    score = 0
 
     #Setup and play music
     track.start()
@@ -131,9 +134,10 @@ def gameLoop(canvas: pygame.Surface):
         canvas.fill(bgcolor)
         pygame.display.set_caption("ACM Rythm Game")
         
+        print(score.score)
         dt = clock.tick(60)
 
-        print(beat_map)
+        #print(beat_map)
         
         showLanes(lanes,canvas)
         showLandings(landings,canvas, input_state)
@@ -157,27 +161,34 @@ def gameLoop(canvas: pygame.Surface):
 
 
 def endMenu(canvas):
+    global score
     clock = pygame.time.Clock()
     pygame.display.set_caption("End Menu")
     looping = True
     while looping:
         clock.tick(60)
+        canvas.fill(bgcolor)
         mouse = pygame.mouse.get_pos()
 
         titleText = get_font(60).render("Game Over!", True, "#FFFFFF")
-        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 200))
-        scoreText = get_font(30).render("Final Score: " + str(score), True, "#FFFFFF")
-        scoreRect = scoreText.get_rect(center=(width / 2, (height / 2) - 100))
+        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 250))
+        
+        gradeText = get_font(60).render(score.determineGrade(), True, "#FFA500")
+        gradeRect = gradeText.get_rect(center=(width / 2, (height / 2) - 150))
+        
+        scoreText = get_font(30).render("Final Score: " + str(score.score) + " / " + str(score.maxScore), True, "#FFFFFF")
+        scoreRect = scoreText.get_rect(center=(width / 2, (height / 2) - 50))
 
-        playAgainButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 100), 
-                        text_input="Play Again?", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
+        #playAgainButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 100), 
+        #                text_input="Play Again?", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
         quitButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 200), 
                         text_input="Quit Game", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
 
         canvas.blit(titleText, titleRect)
+        canvas.blit(gradeText, gradeRect)
         canvas.blit(scoreText, scoreRect)
 
-        for button in [playAgainButton,quitButton]:
+        for button in [quitButton]:
             button.changeColor(mouse)
             button.update(canvas)
         
@@ -191,7 +202,6 @@ def endMenu(canvas):
                     exit(0)
             
         pygame.display.update()
-        canvas.fill((bgcolor))
 
 def main():
     pygame.init()

@@ -1,11 +1,11 @@
 import pygame
-import os
 import re
 
-from dataclasses import dataclass, field
-from enum import Enum, auto
+from dataclasses import dataclass
+from enum import Enum
 from .config import *
 from .landing import Landing
+from .score import *
 
 class BeatType(Enum):
     First = "first" 
@@ -33,14 +33,20 @@ class Beat(pygame.sprite.Sprite):
         self._screen.blit(self._image,self.rect)
         
     def collide(self):
+        global score
         coll = self.rect.colliderect(self.landing.rect)
-        self.valid = False
-        score += 1
+        if coll:
+            score.updateScore(5)
+            print(score.score)
+            self.valid = False
+
     
     def update(self):
+        self.collide()
         self.rect.top += gameSpeed
         if self.rect.top > height:
             self.valid = False
+
 
 def readBeatMap(file: path) -> list[BeatData]:
     new_beat_map = []
