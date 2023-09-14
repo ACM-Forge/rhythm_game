@@ -46,8 +46,8 @@ def loadLandings() -> list[Landing]:
     
     rightArrow = Landing("arrow.png",(255,0,0),rightArrowRect, 0.0)
     downArrow  = Landing("arrow.png",(0,255,0), downArrowRect, 270.0)
-    leftArrow  = Landing("arrow.png",(0,0,255), leftArrowRect, 180.0)
     upArrow    = Landing("arrow.png",(255,255,0), upArrowRect, 90.0)
+    leftArrow  = Landing("arrow.png",(0,0,255), leftArrowRect, 180.0)
 
     return [leftArrow,downArrow,upArrow,rightArrow]
     

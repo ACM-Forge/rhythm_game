@@ -22,7 +22,7 @@ class BeatData:
 class Beat(pygame.sprite.Sprite):
     def __init__(self,pos, bData, image, screen, landing):
         super().__init__()
-        self._image = image
+        self._image: pygame.Surface = image
         self._screen: pygame.Surface = screen
         self.landing: Landing = landing
         self.type: BeatData = bData
@@ -30,6 +30,8 @@ class Beat(pygame.sprite.Sprite):
         self.valid = True
 
     def show(self):
+        if(self.landing.input_time != 0):
+            self._screen.blit(self._image,self._image.fill((255,255,255), special_flags=pygame.BLEND_RGBA_MULT))
         self._screen.blit(self._image,self.rect)
         
     def checkCollide(self):
@@ -40,8 +42,8 @@ class Beat(pygame.sprite.Sprite):
         if coll:
             diff = abs(self.landing.input_time - self.type.timing)
             print(diff)
-            if diff <= 125:
-                points = 5 - (diff / 50)
+            if diff <= 5 * input_threshold:
+                points = 5 - (diff / input_threshold)
                 score.updateScore(points)
                 #print(score.score)
             self.valid = False

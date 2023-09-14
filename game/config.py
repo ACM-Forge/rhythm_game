@@ -7,6 +7,8 @@ height = 600
 gameSpeed = 10
 bgcolor = (51,51,51)
 
+input_threshold = 75
+
 # Settings for beats
 beatSize = (100,100)
 iconSize = (100,100)
@@ -28,8 +30,8 @@ track_path = path.join(game_path,"track.txt")
 # Settings for the correct inputs 
 InputButtons = {
     "First": pygame.K_LEFT,
-    "Second": pygame.K_UP,
-    "Third" : pygame.K_DOWN,
+    "Second": pygame.K_DOWN,
+    "Third" : pygame.K_UP,
     "Fourth" : pygame.K_RIGHT,
 }
 
