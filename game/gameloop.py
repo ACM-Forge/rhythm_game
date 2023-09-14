@@ -118,8 +118,9 @@ def gameLoop(canvas: pygame.Surface):
     
     # Show a countdown before the game starts
     countDown(canvas,0)
+    pos = 38000
     
-    track = Track(music_path,beat_map, landings,canvas)
+    track = Track(music_path,beat_map, landings,canvas, pos)
     pygame.display.set_caption("ACM Rhythm")
     clock = pygame.time.Clock()
     
@@ -139,7 +140,7 @@ def gameLoop(canvas: pygame.Surface):
         #print(score.score)
         dt = clock.tick(60)
         
-        timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time)), True, "#FFFFFF")
+        timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time + pos)), True, "#FFFFFF")
         canvas.blit(timeText,timeRect) 
         
         showLanes(lanes,canvas)

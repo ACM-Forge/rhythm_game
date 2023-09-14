@@ -34,3 +34,88 @@ fourth 18300
 first  18600
 first  18900
 second 19200
+
+#
+
+first  20900
+third  20900
+
+second 22500
+fourth 22500
+
+third  24300
+fourth 24300
+
+fourth 24600
+fourth 24900
+first  25200
+first  25500
+second 25700
+
+# Second to last intro
+
+first  27600
+third  27800
+fourth 27800
+
+fourth 29000
+first  29400
+second 29400
+
+third  31300
+first  31500
+fourth 31700
+second 32100
+first  32300
+
+# Final part of intro
+
+first  33900
+first  34100
+second 34300
+
+second 35000
+third  35200
+fourth 35400
+
+first  35800
+fourth 36200
+first  36600
+third  37000
+second 37400
+
+# Final intro
+
+first  40500
+first  40700
+fourth 40900
+
+# Chorus
+
+first  41500
+third  41700
+second 41900
+first  42100
+fourth 42300
+third  42500
+
+first  43100
+third  43300
+second 43500
+first  43700
+fourth 43900
+third  44100
+
+first  41500
+third  41700
+second 41900
+first  42100
+fourth 42300
+third  42500
+
+first  43100
+third  43300
+second 43500
+first  43700
+fourth 43900
+third  44100

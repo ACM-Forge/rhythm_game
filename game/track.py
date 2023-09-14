@@ -6,7 +6,7 @@ from .beat import *
 from .landing import *
 
 class Track:
-    def __init__(self,music, bMap, landings, canvas):
+    def __init__(self,music, bMap, landings, canvas, pos):
         self.music = music
         self.bMap: list[BeatData] = bMap
         self.landings: list[Landing] = landings
@@ -14,6 +14,7 @@ class Track:
         self.canvas = canvas
         self.start_time = pygame.time.get_ticks()
         self.valid = True
+        self.start_pos = pos
     
     def start(self):
         # Start playing music
@@ -23,6 +24,7 @@ class Track:
         )
         pygame.mixer.music.set_volume(music_volume)
         pygame.mixer.music.play()
+        pygame.mixer.music.set_pos(self.start_pos / 1000)
         pygame.mixer.music.set_endevent(songOver)
     
 
@@ -35,9 +37,12 @@ class Track:
     def checkCreateBeat(self) -> Beat:
         """ See if a new beat should be created, if so create it"""
         
-        curr_time = pygame.time.get_ticks() - self.start_time
+        curr_time = pygame.time.get_ticks() - self.start_time + self.start_pos
         time_diff = curr_time - self.bMap[0].timing + 100 * gameSpeed
         
+        if time_diff > 1000:
+            self.bMap.pop(0)
+            return
         if time_diff < -50 or time_diff > 50:
             return
         bData = self.bMap.pop(0)

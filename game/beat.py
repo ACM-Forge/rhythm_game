@@ -61,7 +61,7 @@ def readBeatMap(file: path) -> list[BeatData]:
     new_beat_map = []
     with open(file, "r") as f:
         for line in f:
-            if line == "\n":
+            if line == "\n" or line[0] == "#":
                 continue
             type_str, timing = re.split(r" {1,}",line.strip())
 
