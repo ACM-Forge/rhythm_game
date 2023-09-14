@@ -34,10 +34,11 @@ def resetInput(event: pygame.event.Event,input_state: Input):
 
 def loadLanes() -> []:
     """Create all lanes for beats to travel along to be displayed on each frame"""
-    lane_1 = pygame.rect.Rect(width / 6.5,0,100,height)
-    lane_2 = pygame.rect.Rect(width / 2.9,0,100,height)
-    lane_3 = pygame.rect.Rect(width / 1.9,0,100,height)
-    lane_4 = pygame.rect.Rect(width / 1.4,0,100,height)
+    center = width / 2
+    lane_1 = pygame.rect.Rect(center - 275,0,100,height)
+    lane_2 = pygame.rect.Rect(center - 125,0,100,height)
+    lane_3 = pygame.rect.Rect(center + 25,0,100,height)
+    lane_4 = pygame.rect.Rect(center + 175,0,100,height)
     
     return [lane_1,lane_2,lane_3,lane_4]
 
@@ -47,13 +48,16 @@ def showLanes(lanes:[pygame.Rect], screen):
     for lane in lanes:
         pygame.draw.rect(screen,(81,81,81),lane)
 
+
 def showText(canvas: pygame.Surface, text: str, color: tuple, pos: tuple):
     font = game_font.render(text,False,color)
     canvas.blit(font,pos)
-    
+
+ 
 def get_font(size): 
     return pygame.font.Font("sprites/font.ttf", size)
     
+
 def startMenu(canvas: pygame.Surface):
     clock = pygame.time.Clock()
     pygame.display.set_caption("Start Menu")
@@ -88,7 +92,9 @@ def startMenu(canvas: pygame.Surface):
         pygame.display.update()
         canvas.fill((bgcolor))
 
+
 def countDown(canvas, count):
+    canvas.fill((51,51,51))
     for seconds in reversed(range(count)):
         countdownText = get_font(75).render(str(seconds + 1), True, "#FFFFFF")
         countdownRect = countdownText.get_rect(center=(width / 2, height / 2))
@@ -96,19 +102,20 @@ def countDown(canvas, count):
         canvas.blit(countdownText, countdownRect)
         pygame.display.update()
         sleep(1)
-        
+
+  
 def gameLoop(canvas: pygame.Surface):
     # Preload all objects to be used in the game loop
     beat_map = readBeatMap(track_path)
     music_path = os.path.join(music,"main.mp3")
-    track = Track(music_path,beat_map,canvas)
     
     lanes = loadLanes()
     landings = loadLandings()
     input_state = Input()
     
+    track = Track(music_path,beat_map, landings,canvas)
+    
     # Show a countdown before the game starts
-    canvas.fill((51,51,51))
     countDown(canvas,3)
     pygame.display.set_caption("ACM Rhythm")
     
@@ -125,7 +132,7 @@ def gameLoop(canvas: pygame.Surface):
         
         dt = clock.tick(60)
 
-        
+        print(track.curr_beats)
         
         showLanes(lanes,canvas)
         showLandings(landings,canvas, input_state)
@@ -133,7 +140,7 @@ def gameLoop(canvas: pygame.Surface):
         track.show()
         track.update()
         
-        print(input_state)
+        #print(input_state)
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:

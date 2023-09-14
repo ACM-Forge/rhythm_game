@@ -8,9 +8,8 @@ gameSpeed = 5
 score = 0
 
 beatSize = (100,100)
-bgcolor = (0,0,0)
+bgcolor = (51,51,51)
 iconSize = (100,100)
-
 
 
 # Settings for music

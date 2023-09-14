@@ -18,10 +18,11 @@ class BeatData:
 
 
 class Beat(pygame.sprite.Sprite):
-    def __init__(self,pos, bData, image, screen):
+    def __init__(self,pos, bData, image, screen, landing):
         super().__init__()
         self._image = pygame.transform.scale(pygame.image.load(image),beatSize)
         self._screen: pygame.Surface = screen
+        self.landing = landing
         self.type: BeatData = bData
         self.rect = pygame.rect.Rect(pos[0],pos[1],10,10)
         self.valid = True
@@ -34,6 +35,8 @@ class Beat(pygame.sprite.Sprite):
     
     def update(self):
         self.rect.top += gameSpeed
+        if self.rect.top > height:
+            self.valid = False
 
 def readBeatMap(file: path) -> list[BeatData]:
     new_beat_map = []
