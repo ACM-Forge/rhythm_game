@@ -114,6 +114,7 @@ def gameLoop(canvas: pygame.Surface):
     
     clock = pygame.time.Clock()
     dt = 0
+    score = 0
 
     #Setup and play music
     track.start()
@@ -136,7 +137,7 @@ def gameLoop(canvas: pygame.Surface):
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
-                exit(0)
+                track.valid = False
             if e.type == songOver:
                 print("SONG OVER")
                 track.valid = False
@@ -148,9 +149,41 @@ def gameLoop(canvas: pygame.Surface):
 
 
 def endMenu(canvas):
-    # Show final score and grade
-    # 
-    pass
+    clock = pygame.time.Clock()
+    pygame.display.set_caption("End Menu")
+    looping = True
+    while looping:
+        clock.tick(60)
+        mouse = pygame.mouse.get_pos()
+
+        titleText = get_font(60).render("Game Over!", True, "#FFFFFF")
+        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 200))
+        scoreText = get_font(30).render("Final Score: " + str(score), True, "#FFFFFF")
+        scoreRect = scoreText.get_rect(center=(width / 2, (height / 2) - 100))
+
+        playAgainButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 100), 
+                        text_input="Play Again?", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
+        quitButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 200), 
+                        text_input="Quit Game", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
+
+        canvas.blit(titleText, titleRect)
+        canvas.blit(scoreText, scoreRect)
+
+        for button in [playAgainButton,quitButton]:
+            button.changeColor(mouse)
+            button.update(canvas)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if playAgainButton.checkForInput(mouse):
+                    looping = False
+                if quitButton.checkForInput(mouse):
+                    exit(0)
+            
+        pygame.display.update()
+        canvas.fill((bgcolor))
 
 def main():
     pygame.init()

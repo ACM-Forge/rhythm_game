@@ -5,6 +5,7 @@ import pygame
 width = 800
 height = 600
 gameSpeed = 5
+score = 0
 
 beatSize = (100,100)
 bgcolor = (0,0,0)
