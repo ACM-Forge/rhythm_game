@@ -2,7 +2,6 @@ import pygame
 import os
 from time import sleep
 
-from .types import *
 from .landing import *
 from .beat import *
 from .button import *
@@ -10,27 +9,27 @@ from .track import *
 from .config import *
 from .score import *
 
-def handleInput(event: pygame.event.Event, input_state: Input):
-    currTime = pygame.time.get_ticks()
+def handleInput(event: pygame.event.Event, landings: list[Landing], start_time: float):
+    currTime = pygame.time.get_ticks() - start_time
     if event.key == InputButtons["First"]:
-        input_state.first = float(currTime)
+        landings[0].setInputTime(float(currTime))
     if event.key == InputButtons["Second"]:
-        input_state.second = float(currTime)
+        landings[1].setInputTime(float(currTime))
     if event.key == InputButtons["Third"]:
-        input_state.third = float(currTime)
+        landings[2].setInputTime(float(currTime))
     if event.key == InputButtons["Fourth"]:
-        input_state.fourth = float(currTime)
+        landings[3].setInputTime(float(currTime))
 
 
-def resetInput(event: pygame.event.Event,input_state: Input):
+def resetInput(event: pygame.event.Event,landings: list[Landing]):
     if event.key == InputButtons["First"]:
-        input_state.first = 0
+        landings[0].setInputTime(0)
     if event.key == InputButtons["Second"]:
-        input_state.second = 0
+        landings[1].setInputTime(0)
     if event.key == InputButtons["Third"]:
-        input_state.third = 0
+        landings[2].setInputTime(0)
     if event.key == InputButtons["Fourth"]:
-        input_state.fourth = 0
+        landings[3].setInputTime(0)
 
 
 def loadLanes() -> []:
@@ -54,7 +53,7 @@ def showText(canvas: pygame.Surface, text: str, color: tuple, pos: tuple):
     font = game_font.render(text,False,color)
     canvas.blit(font,pos)
 
- 
+
 def get_font(size): 
     return pygame.font.Font("sprites/font.ttf", size)
     
@@ -104,7 +103,7 @@ def countDown(canvas, count):
         pygame.display.update()
         sleep(1)
 
-  
+
 def gameLoop(canvas: pygame.Surface):
     global score
     # Preload all objects to be used in the game loop
@@ -115,7 +114,6 @@ def gameLoop(canvas: pygame.Surface):
     
     lanes = loadLanes()
     landings = loadLandings()
-    input_state = Input()
     
     
     # Show a countdown before the game starts
@@ -129,23 +127,27 @@ def gameLoop(canvas: pygame.Surface):
 
     #Setup and play music
     track.start()
+    timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time)), True, "#FFFFFF")
+    timeRect = timeText.get_rect(center=(width / 20, height / 2))
+    
+    
     
     while track.valid:
         canvas.fill(bgcolor)
         pygame.display.set_caption("ACM Rythm Game")
         
-        print(score.score)
+        #print(score.score)
         dt = clock.tick(60)
-
-        #print(beat_map)
+        
+        timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time)), True, "#FFFFFF")
+        canvas.blit(timeText,timeRect) 
         
         showLanes(lanes,canvas)
-        showLandings(landings,canvas, input_state)
+        for landing in landings:
+            landing.show(canvas)
         
         track.show()
         track.update()
-        
-        #print(track.bMap)
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
@@ -154,9 +156,9 @@ def gameLoop(canvas: pygame.Surface):
                 print("SONG OVER")
                 track.valid = False
             if e.type == pygame.KEYDOWN:
-                handleInput(e,input_state)
+                handleInput(e, landings, track.start_time)
             if e.type == pygame.KEYUP:
-                resetInput(e,input_state)
+                resetInput(e,landings)
         pygame.display.flip()
 
 
@@ -171,13 +173,13 @@ def endMenu(canvas):
         mouse = pygame.mouse.get_pos()
 
         titleText = get_font(60).render("Game Over!", True, "#FFFFFF")
-        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 250))
+        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 150))
         
         gradeText = get_font(60).render(score.determineGrade(), True, "#FFA500")
-        gradeRect = gradeText.get_rect(center=(width / 2, (height / 2) - 150))
+        gradeRect = gradeText.get_rect(center=(width / 2, (height / 2) - 50))
         
-        scoreText = get_font(30).render("Final Score: " + str(score.score) + " / " + str(score.maxScore), True, "#FFFFFF")
-        scoreRect = scoreText.get_rect(center=(width / 2, (height / 2) - 50))
+        scoreText = get_font(30).render("Final Score: " + str(int(score.score)) + " / " + str(score.maxScore), True, "#FFFFFF")
+        scoreRect = scoreText.get_rect(center=(width / 2, (height / 2) + 50))
 
         #playAgainButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 100), 
         #                text_input="Play Again?", font=get_font(30), base_color="#D3D3D3", hovering_color="White")
@@ -196,8 +198,8 @@ def endMenu(canvas):
             if event.type == pygame.QUIT:
                 exit(0)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if playAgainButton.checkForInput(mouse):
-                    looping = False
+                # if playAgainButton.checkForInput(mouse):
+                #     looping = False
                 if quitButton.checkForInput(mouse):
                     exit(0)
             

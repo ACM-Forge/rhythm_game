@@ -32,17 +32,24 @@ class Beat(pygame.sprite.Sprite):
     def show(self):
         self._screen.blit(self._image,self.rect)
         
-    def collide(self):
+    def checkCollide(self):
         global score
+        if self.landing.input_time == 0.0:
+            return
         coll = self.rect.colliderect(self.landing.rect)
         if coll:
-            score.updateScore(5)
-            print(score.score)
+            diff = abs(self.landing.input_time - self.type.timing)
+            print(diff)
+            if diff <= 125:
+                points = 5 - (diff / 50)
+                score.updateScore(points)
+                #print(score.score)
             self.valid = False
+                
 
     
     def update(self):
-        self.collide()
+        self.checkCollide()
         self.rect.top += gameSpeed
         if self.rect.top > height:
             self.valid = False

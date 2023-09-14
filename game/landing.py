@@ -21,6 +21,14 @@ class Landing(pygame.sprite.Sprite):
         super().__init__()
         self.rect = rect
         self.image = createBeatImage(img_path,(rect.width,rect.height),color,rotation)
+        self.input_time = 0
+    
+    def setInputTime(self,val):
+        self.input_time = val
+        
+    def show(self,screen):
+        screen.blit(self.image,self.rect)
+        
 
 
 def loadLandings() -> list[Landing]:
@@ -43,16 +51,3 @@ def loadLandings() -> list[Landing]:
 
     return [leftArrow,downArrow,upArrow,rightArrow]
     
-def showLandings(landings: list[Landing],screen: pygame.Surface, inputs: input):
-    
-    # if inputs.first != 0:
-    #     # Show the icon filled in
-    # elif inputs.second != 0:
-    #     # Show the icon filled in
-    # elif inputs.third != 0:
-    #     # Show the icon filled in
-    # elif inputs.fourth != 0:
-    #     # Show the icon filled in
-    
-    for landing in landings:
-        screen.blit(landing.image,landing.rect)

@@ -11,11 +11,26 @@ second 8150
 first  8400
 
 fourth 9800
-third  9950
-fourth 10100
+third  9970
+fourth 10120
 
 first  11500
 first  11700
 fourth 11900
 fourth 12200
-third  12400
+third  12500
+
+first  14200
+fourth 14200
+
+second 16000
+third  16000
+
+first  17600
+second 17600
+
+fourth 18100
+fourth 18300
+first  18600
+first  18900
+second 19000
