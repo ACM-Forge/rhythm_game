@@ -5,6 +5,7 @@ from time import sleep
 from .types import *
 from .landing import *
 from .beat import *
+from .button import *
 from .track import *
 from .config import *
 
@@ -50,25 +51,49 @@ def showText(canvas: pygame.Surface, text: str, color: tuple, pos: tuple):
     font = game_font.render(text,False,color)
     canvas.blit(font,pos)
     
+def get_font(size): 
+    return pygame.font.Font("sprites/font.ttf", size)
+    
 def startMenu(canvas: pygame.Surface):
     clock = pygame.time.Clock()
-    countdown = False
-    
-    canvas.fill((51,51,51))
-    showText(canvas,"Click to Start",(255,255,255),(width / 3, height / 2.5))
-    pygame.display.update()
-    while not countdown:
+    pygame.display.set_caption("Start Menu")
+        
+    while True:
         clock.tick(60)
+        mouse = pygame.mouse.get_pos()
+
+        titleText = get_font(75).render("ACM Rhythm", True, "#FFFFFF")
+        titleRect = titleText.get_rect(center=(width / 2, (height / 2) - 200))
+
+        playButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2)), 
+                        text_input="Play Game", font=get_font(40), base_color="#D3D3D3", hovering_color="White")
+        quitButton = Button(image=pygame.image.load("sprites/Play_Rect.png"), pos=(width / 2, (height / 2) + 100), 
+                        text_input="Quit Game", font=get_font(40), base_color="#D3D3D3", hovering_color="White")
+
+        canvas.blit(titleText, titleRect)
+
+        for button in [playButton,quitButton]:
+            button.changeColor(mouse)
+            button.update(canvas)
+        
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP:
-                countdown = True
             if event.type == pygame.QUIT:
                 exit(0)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if playButton.checkForInput(mouse):
+                    gameLoop(canvas)
+                if quitButton.checkForInput(mouse):
+                    exit(0)
+            
+        pygame.display.update()
+        canvas.fill((bgcolor))
 
 def countDown(canvas, count):
     for seconds in reversed(range(count)):
+        countdownText = get_font(75).render(str(seconds + 1), True, "#FFFFFF")
+        countdownRect = countdownText.get_rect(center=(width / 2, height / 2))
         canvas.fill(bgcolor)
-        showText(canvas,str(seconds + 1),(255,255,255),(width / 2, height / 2.5))
+        canvas.blit(countdownText, countdownRect)
         pygame.display.update()
         sleep(1)
         
@@ -82,6 +107,7 @@ def gameLoop(canvas: pygame.Surface):
     # Show a countdown before the game starts
     canvas.fill((51,51,51))
     countDown(canvas,3)
+    pygame.display.set_caption("ACM Rhythm")
     
     clock = pygame.time.Clock()
     dt = 0
@@ -108,7 +134,7 @@ def gameLoop(canvas: pygame.Surface):
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
-                gameOver = True
+                exit(0)
             # if e.type == beatEVENT:
             #     #call beat spawn function
             #     pass
