@@ -1,9 +1,11 @@
 import pygame
 import os
+import re
 
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from .config import *
+from .landing import Landing
 
 class BeatType(Enum):
     First = "first" 
@@ -20,9 +22,9 @@ class BeatData:
 class Beat(pygame.sprite.Sprite):
     def __init__(self,pos, bData, image, screen, landing):
         super().__init__()
-        self._image = pygame.transform.scale(pygame.image.load(image),beatSize)
+        self._image = image
         self._screen: pygame.Surface = screen
-        self.landing = landing
+        self.landing: Landing = landing
         self.type: BeatData = bData
         self.rect = pygame.rect.Rect(pos[0],pos[1],10,10)
         self.valid = True
@@ -31,7 +33,9 @@ class Beat(pygame.sprite.Sprite):
         self._screen.blit(self._image,self.rect)
         
     def collide(self):
-        pass
+        coll = self.rect.colliderect(self.landing.rect)
+        self.valid = False
+        score += 1
     
     def update(self):
         self.rect.top += gameSpeed
@@ -42,13 +46,15 @@ def readBeatMap(file: path) -> list[BeatData]:
     new_beat_map = []
     with open(file, "r") as f:
         for line in f:
-            type_str, timing = line.strip().split(" ")
-            
+            if line == "\n":
+                continue
+            type_str, timing = re.split(r" {1,}",line.strip())
+
             if type_str in (list(map(str.lower,BeatType._member_names_))):
                 beat_type = BeatType(type_str)
             else:
                 beat_type = BeatType.First
-            
+
             new_beat = BeatData(beat_type,float(timing))
             new_beat_map.append(new_beat)
     return new_beat_map

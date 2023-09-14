@@ -9,7 +9,9 @@ clock = pygame.time.Clock()
 
 
 while True:
+    # Set the tickrate of the game
     clock.tick(60)
+    # Fill the screen with a background color
     screen.fill((51,51,51))
     
     # Draw several shapes onto the screen

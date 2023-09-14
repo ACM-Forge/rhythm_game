@@ -26,19 +26,20 @@ class Landing(pygame.sprite.Sprite):
 def loadLandings() -> list[Landing]:
     center = (width / 2,9 * height / 10)
     
-    leftArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    downArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    upArrowRect =   pygame.rect.Rect(center[0],center[1],iconSize[0],iconSize[1])
+    leftArrowRect =  pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
+    downArrowRect =  pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
+    upArrowRect =    pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
     rightArrowRect = pygame.rect.Rect(0,0,iconSize[0],iconSize[1])
-    leftArrowRect.center =  (center[0] - 225 ,center[1])
+    
+    leftArrowRect.center =  (center[0] - 225,center[1])
     downArrowRect.center =  (center[0] - 75 ,center[1])
     upArrowRect.center =    (center[0] + 75 ,center[1])
     rightArrowRect.center = (center[0] + 225,center[1])
     
-    leftArrow = Landing("arrow.png",(0,0,255), leftArrowRect, 180.0)
-    downArrow = Landing("arrow.png",(0,255,0), downArrowRect, 90.0)
-    upArrow = Landing("arrow.png",(255,255,0), upArrowRect, 270.0)
     rightArrow = Landing("arrow.png",(255,0,0),rightArrowRect, 0.0)
+    downArrow =  Landing("arrow.png",(0,255,0), downArrowRect, 270.0)
+    leftArrow =  Landing("arrow.png",(0,0,255), leftArrowRect, 180.0)
+    upArrow =    Landing("arrow.png",(255,255,0), upArrowRect, 90.0)
 
     return [leftArrow,downArrow,upArrow,rightArrow]
     

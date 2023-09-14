@@ -1,4 +1,21 @@
-first 1000
-second 2000
-third 3000 
-fourth 5000
+first  1000
+second 1900
+third  2800 
+fourth 3700
+second 4600
+first  5400
+third  6200
+
+first  8000
+second 8150
+first  8400
+
+fourth 9800
+third  9950
+fourth 10100
+
+first  11500
+first  11700
+fourth 11900
+fourth 12200
+third  12400

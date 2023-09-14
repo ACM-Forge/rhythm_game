@@ -10,15 +10,15 @@ from .track import *
 from .config import *
 
 def handleInput(event: pygame.event.Event, input_state: Input):
-    seconds = (pygame.time.get_ticks() / 1000.0)
+    currTime = pygame.time.get_ticks()
     if event.key == InputButtons["First"]:
-        input_state.first = float(seconds)
+        input_state.first = float(currTime)
     if event.key == InputButtons["Second"]:
-        input_state.second = float(seconds)
+        input_state.second = float(currTime)
     if event.key == InputButtons["Third"]:
-        input_state.third = float(seconds)
+        input_state.third = float(currTime)
     if event.key == InputButtons["Fourth"]:
-        input_state.fourth = float(seconds)
+        input_state.fourth = float(currTime)
 
 
 def resetInput(event: pygame.event.Event,input_state: Input):
@@ -113,13 +113,14 @@ def gameLoop(canvas: pygame.Surface):
     landings = loadLandings()
     input_state = Input()
     
-    track = Track(music_path,beat_map, landings,canvas)
     
     # Show a countdown before the game starts
-    countDown(canvas,3)
-    pygame.display.set_caption("ACM Rhythm")
+    countDown(canvas,0)
     
+    track = Track(music_path,beat_map, landings,canvas)
+    pygame.display.set_caption("ACM Rhythm")
     clock = pygame.time.Clock()
+    
     dt = 0
     score = 0
 
@@ -132,7 +133,7 @@ def gameLoop(canvas: pygame.Surface):
         
         dt = clock.tick(60)
 
-        print(track.curr_beats)
+        print(beat_map)
         
         showLanes(lanes,canvas)
         showLandings(landings,canvas, input_state)
@@ -140,11 +141,11 @@ def gameLoop(canvas: pygame.Surface):
         track.show()
         track.update()
         
-        #print(input_state)
+        #print(track.bMap)
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
-                track.valid = False
+                exit(0)
             if e.type == songOver:
                 print("SONG OVER")
                 track.valid = False
