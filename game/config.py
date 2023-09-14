@@ -4,13 +4,17 @@ import pygame
 # Settings for graphics
 width = 800
 height = 600
-gameSpeed = 1
+gameSpeed = 5
+
 beatSize = (100,100)
 bgcolor = (0,0,0)
 iconSize = (100,100)
 
+
+
 # Settings for music
 music_volume = 0.05
+songOver = pygame.USEREVENT+1
 
 # Setup font configuration
 pygame.font.init()

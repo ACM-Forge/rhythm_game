@@ -16,22 +16,26 @@ class BeatData:
     b_type: BeatType
     timing: float
 
+
 class Beat(pygame.sprite.Sprite):
-    def __init__(self,pos, type, image, screen, time):
+    def __init__(self,pos, bData, image, screen):
         super().__init__()
-        self._image = image
+        self._image = pygame.transform.scale(pygame.image.load(image),beatSize)
         self._screen: pygame.Surface = screen
-        self.type: BeatType = type
-        self.rect: pygame.Rect = self.image.get_rect(center=pos)
-        self.time = time
+        self.type: BeatData = bData
+        self.rect = pygame.rect.Rect(pos[0],pos[1],10,10)
+        self.valid = True
 
     def show(self):
-        self._screen.blit(self.image,self.rect)
+        self._screen.blit(self._image,self.rect)
+        
+    def collide(self):
+        pass
     
     def update(self):
-        self.rect.top -= gameSpeed
+        self.rect.top += gameSpeed
 
-def readBeatMap(file: path) -> [BeatData]:
+def readBeatMap(file: path) -> list[BeatData]:
     new_beat_map = []
     with open(file, "r") as f:
         for line in f:

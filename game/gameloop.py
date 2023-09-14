@@ -57,8 +57,8 @@ def get_font(size):
 def startMenu(canvas: pygame.Surface):
     clock = pygame.time.Clock()
     pygame.display.set_caption("Start Menu")
-        
-    while True:
+    looping = True
+    while looping:
         clock.tick(60)
         mouse = pygame.mouse.get_pos()
 
@@ -81,7 +81,7 @@ def startMenu(canvas: pygame.Surface):
                 exit(0)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if playButton.checkForInput(mouse):
-                    gameLoop(canvas)
+                    looping = False
                 if quitButton.checkForInput(mouse):
                     exit(0)
             
@@ -100,6 +100,9 @@ def countDown(canvas, count):
 def gameLoop(canvas: pygame.Surface):
     # Preload all objects to be used in the game loop
     beat_map = readBeatMap(track_path)
+    music_path = os.path.join(music,"main.mp3")
+    track = Track(music_path,beat_map,canvas)
+    
     lanes = loadLanes()
     landings = loadLandings()
     input_state = Input()
@@ -112,32 +115,31 @@ def gameLoop(canvas: pygame.Surface):
     clock = pygame.time.Clock()
     dt = 0
 
-    # Setup and play music
-    pygame.mixer.init()
-    pygame.mixer.music.load(
-        os.path.join(music,"main.mp3")
-    )
-    pygame.mixer.music.set_volume(music_volume)
-    pygame.mixer.music.play()
+    #Setup and play music
+    track.start()
     
-    
-    gameOver = False
-    while not gameOver:
+    while track.valid:
         canvas.fill(bgcolor)
         pygame.display.set_caption("ACM Rythm Game")
         
         dt = clock.tick(60)
-            
+
+        
+        
         showLanes(lanes,canvas)
         showLandings(landings,canvas, input_state)
+        
+        track.show()
+        track.update()
+        
         print(input_state)
         
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 exit(0)
-            # if e.type == beatEVENT:
-            #     #call beat spawn function
-            #     pass
+            if e.type == songOver:
+                print("SONG OVER")
+                track.valid = False
             if e.type == pygame.KEYDOWN:
                 handleInput(e,input_state)
             if e.type == pygame.KEYUP:

@@ -1,7 +1,6 @@
 import pygame
 import os
 
-from dataclasses import dataclass, field
 from enum import Enum, auto
 from .config import *
 
