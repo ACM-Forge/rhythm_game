@@ -30,8 +30,8 @@ class Beat(pygame.sprite.Sprite):
         self.valid = True
 
     def show(self):
-        if(self.landing.input_time != 0):
-            self._screen.blit(self._image,self._image.fill((255,255,255), special_flags=pygame.BLEND_RGBA_MULT))
+        #if(self.landing.input_time != 0):
+        #    self._screen.blit(self._image,self._image.fill((255,255,255), special_flags=pygame.BLEND_RGBA_MULT))
         self._screen.blit(self._image,self.rect)
         
     def checkCollide(self):

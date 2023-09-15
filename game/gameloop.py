@@ -117,8 +117,8 @@ def gameLoop(canvas: pygame.Surface):
     
     
     # Show a countdown before the game starts
-    countDown(canvas,0)
-    pos = 38000
+    countDown(canvas,3)
+    pos = 0
     
     track = Track(music_path,beat_map, landings,canvas, pos)
     pygame.display.set_caption("ACM Rhythm")
@@ -128,20 +128,36 @@ def gameLoop(canvas: pygame.Surface):
 
     #Setup and play music
     track.start()
-    timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time)), True, "#FFFFFF")
-    timeRect = timeText.get_rect(center=(width / 20, height / 2))
+    timeText = get_font(15).render("Time:", True, "#FFFFFF")
+    timeRect = timeText.get_rect(center=((width / 20) + 25, height / 2))
+    
+    scoreText = get_font(15).render("Score:", True, "#FFFFFF")
+    scoreRect = scoreText.get_rect(center=((width / 20) + 25, (height / 2) - 100))
+    
+    scoreNum = get_font(15).render(str(int(score.score)), True, "#FFFFFF")
+    numRect = scoreNum.get_rect(center=((width / 20), (height / 2) - 80))
+    
+    timeNum = get_font(15).render(str((pygame.time.get_ticks() - track.start_time)), True, "#FFFFFF")
+    timeNumRect = timeNum.get_rect(center=(width / 20, (height / 2) + 20))
+    
     
     
     
     while track.valid:
         canvas.fill(bgcolor)
-        pygame.display.set_caption("ACM Rythm Game")
+        pygame.display.set_caption("ACM Rhythm Game")
         
         #print(score.score)
         dt = clock.tick(60)
         
-        timeText = get_font(15).render(str((pygame.time.get_ticks() - track.start_time + pos)), True, "#FFFFFF")
+        timeText = get_font(15).render("Time:", True, "#FFFFFF")
+        scoreText = get_font(15).render("Score:", True, "#FFFFFF")
+        scoreNum = get_font(15).render(str(int(score.score)), True, "#FFFFFF")
+        timeNum = get_font(15).render(str(((pygame.time.get_ticks() - track.start_time + pos)) / 1000 ), True, "#FFFFFF")
         canvas.blit(timeText,timeRect) 
+        canvas.blit(scoreText, scoreRect)
+        canvas.blit(scoreNum, numRect)
+        canvas.blit(timeNum, timeNumRect)
         
         showLanes(lanes,canvas)
         for landing in landings:
